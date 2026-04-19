@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: weeklyreport-frontend
+  namespace: weeklyreport-dev
+  labels:
+    app: weeklyreport-frontend
+spec:
+  selector:
+    app: weeklyreport-frontend
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  type: ClusterIP

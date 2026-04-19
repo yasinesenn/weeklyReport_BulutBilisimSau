@@ -1,0 +1,19 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: weeklyreport-dev
+  namespace: weeklyreport-dev
+  labels:
+    app: weeklyreport-frontend
+spec:
+  # Kendi domain'inizi buraya yazin
+  # host: weekly-report.local
+  to:
+    kind: Service
+    name: weeklyreport-frontend
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

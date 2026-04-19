@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: weeklyreport-backend
+  namespace: weeklyreport-dev
+  labels:
+    app: weeklyreport-backend
+spec:
+  selector:
+    app: weeklyreport-backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+      protocol: TCP
+      name: http
+  type: ClusterIP

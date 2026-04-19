@@ -1,0 +1,12 @@
+node_modules
+client/node_modules
+server/node_modules
+client/dist
+.git
+.env
+*.log
+.vscode
+.idea
+server/db/data/*.json
+server/uploads/*
+!server/uploads/.gitkeep

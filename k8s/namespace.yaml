@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: weekly-report
+  labels:
+    app.kubernetes.io/name: weekly-report
+    app.kubernetes.io/part-of: weekly-report-system

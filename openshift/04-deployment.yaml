@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weeklyreport-backend
+  namespace: weeklyreport-dev
+  labels:
+    app: weeklyreport-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weeklyreport-backend
+  template:
+    metadata:
+      labels:
+        app: weeklyreport-backend
+    spec:
+      containers:
+        - name: weeklyreport-backend
+          image: weekly-report-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: weeklyreport-dev-secret
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/server/uploads
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: weeklyreport-dev-uploads

@@ -1,0 +1,21 @@
+{
+  "name": "weekly-report-server",
+  "version": "1.0.0",
+  "description": "Corporate Weekly Report API Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "npx nodemon --ignore 'db/data/*' index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "ldapjs": "^3.0.7",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.20.0",
+    "puppeteer": "^22.0.0",
+    "uuid": "^9.0.0"
+  }
+}

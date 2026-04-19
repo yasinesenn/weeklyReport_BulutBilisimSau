@@ -1,0 +1,82 @@
+services:
+  # ---- PostgreSQL Database ----
+  postgres:
+    image: postgres:16-alpine
+    container_name: weekly-report-db
+    environment:
+      POSTGRES_DB: weekly_report
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: weekly_report_secret_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./server/db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d weekly_report"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - weekly-network
+
+  # ---- Backend API (Node.js + Express) ----
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: weekly-report-backend
+    ports:
+      - "5001:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - JWT_SECRET=weekly-report-secret-key-2026
+      - DB_ADAPTER=postgresql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=weekly_report
+      - DB_USER=postgres
+      - DB_PASSWORD=weekly_report_secret_2026
+      - LDAP_ENABLED=false
+    volumes:
+      - uploads-data:/app/server/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - weekly-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:5000/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ---- Frontend (Nginx + React) ----
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: weekly-report-frontend
+    ports:
+      - "3000:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - weekly-network
+
+volumes:
+  postgres-data:
+    driver: local
+  uploads-data:
+    driver: local
+
+networks:
+  weekly-network:
+    driver: bridge
