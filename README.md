@@ -105,11 +105,11 @@ Farklı bir bilgisayarda sıfırdan projeyi ayağa kaldırmak için aşağıdaki
 
 ```bash
 # Git ile klonlama
-git clone <repo-url>
-cd weekly_node
+git clone https://github.com/yasinesenn/weeklyReport_BulutBilisimSau.git
+cd weeklyReport_BulutBilisimSau
 
 # VEYA zip dosyasını açtıktan sonra
-cd weekly_node
+cd weeklyReport_BulutBilisimSau
 ```
 
 ### Adım 2: Tüm Servisleri Başlatın
